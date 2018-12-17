@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'etlapp/custom.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+
+  <br>
+
+  <div class="mx-auto">
+    <h1 class="text-center">PROCESY ETL</h1>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <select name="width" style="width:350px">
+      <option>xxx</option>
+      <!--{% for width in widths_list %}
+        <option>{{ width }}</option>
+      {% endfor %}-->
+    </select>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <div class="btn-group">
+      <button class="btn" onclick="test1.py" id="extract">EXTRACT</button>
+      <button class="btn" id="transform">TRANSFORM</button>
+      <button class="btn" id="load">LOAD</button>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <button class="btn btn-block" id="etl">ETL</button>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <textarea class="textBox" id="feedback" readonly></textarea>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <h3 class="text-center">RAPORT</h3>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <div>
+      <button class="btn btn-rep btn-block" id="rap1">POBIERZ BAZĘ W FORMACIE .CSV</button>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="mx-auto" style="width:350px">
+    <button class="btn btn-danger btn-block" id="clearBase">CZYŚĆ BAZĘ</button>
+  </div>
+
+  <br>
+
+  <div class="mx-auto">
+    {% if products_list %}
+        <table class="table table-hover table-sm" id="baseTable">
+          <thead class="thead-dark">
+            <tr>
+              <th>ID BD</th>
+              <th>Producent</th>
+              <th>Nazwa</th>
+              <th>Cena</th>
+              <th>Typ pojazdu</th>
+              <th>Sezon</th>
+              <th>Szerokość</th>
+              <th>Rozmiar</th>
+              <th>Homologacja</th>
+              <th>Indeks prędkości</th>
+              <th>Indeks nośności</th>
+              <th>Etykieta UE</th>
+              <th>Rok produkcji</th>
+              <th>Kraj produkcji</th>
+              <th>Gwarancja</th>
+              <th>Inne</th>
+              <th>Data publikacji w bazie</th>
+              <th>POBIERZ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products_list %}
+            <tr>
+              <th>{{ product.id }}</th>
+              <th>{{ product.Manufacturer }}</th>
+              <th>{{ product.Name }}</th>
+              <th>{{ product.Price }}</th>
+              <th>{{ product.Car_type }}</th>
+              <th>{{ product.season }}</th>
+              <th>{{ product.tire_width }}</th>
+              <th>{{ product.size }}</th>
+              <th>{{ product.approval }}</th>
+              <th>{{ product.speed_index }}</th>
+              <th>{{ product.weight_index }}</th>
+              <th>{{ product.sound_index }}</th>
+              <th>{{ product.production_year }}</th>
+              <th>{{ product.country_of_origin }}</th>
+              <th>{{ product.guaranty }}</th>
+              <th>{{ product.other_info }}</th>
+              <th>{{ product.pub_date }}</th>
+              <th><button class="btn" id="txt">.TXT</button></th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+     <p>Brak danych.</p>
+    {% endif %}
+  </div>
+
+  </body>
+</html>
