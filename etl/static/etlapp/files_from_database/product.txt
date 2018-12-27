@@ -1,0 +1,19 @@
+Produkt: Domestos
+
+Id bazy danych: 2
+Id OPONEO: 234
+Producent: Ajax
+Cena: 23PLN
+Typ pojazdu: rydwan
+Sezon: lato
+Szerokość: 6mm
+Rozmiar: 0,5m
+Homologacja: tak
+Indeks prędkości: 32
+Indeks nośności: 5
+Etykieta UE: 16
+Rok produkcji: 2013
+Kraj produkcji: Polska też
+Gwarancja: owszem
+Inne: wio!
+Data publikacji w bazie: 2018-12-16 18:08:15+00:00

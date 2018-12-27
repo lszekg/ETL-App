@@ -125,7 +125,10 @@
               <th>{{ product.guaranty }}</th>
               <th>{{ product.other_info }}</th>
               <th>{{ product.pub_date }}</th>
-              <th><button class="btn" id="txt">.TXT</button></th>
+              <th>
+                <button class="btn downloadFile" id="clickTxt" name={{ product.id }}>.TXT</button>
+                <a href="#" class='save-txt'></a>
+              </th>
             </tr>
             {% endfor %}
           </tbody>
@@ -137,11 +140,13 @@
 
   <script>
     $('#clicker').click(function(){
+        var selected_product = $(this).text();
         $.ajax({
           type: "POST",
           url: "{% url 'etlapp:save_file' %}",
           data: {
             csrfmiddlewaretoken: '{{ csrf_token }}',
+            selected_product:selected_product,
           },
           success: function(data){
                 $("#rap1").attr("href", "{% static 'etlapp/files_from_database/oponeo.csv' %}");
@@ -150,7 +155,29 @@
             }
           });
     });
-</script>
+  </script>
+
+  <script>    
+    $(".downloadFile").click(function(){
+      var product_id = $(this.id);
+      var selected_product = $(this).text();
+      var selected_id = $(this).attr('name');
+        $.ajax({
+          type: "POST",
+          url: "{% url 'etlapp:save_file' %}",
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            selected_product:selected_product,
+            product_id:selected_id,
+          },
+          success: function(data){
+              $('.save-txt').attr("href", "{% static 'etlapp/files_from_database/product.txt' %}");
+              $('.save-txt').attr('download', "product.txt");
+              document.getElementsByClassName('save-txt')[0].click();
+            }
+          });
+    });
+  </script>
 
   </body>
 </html>
