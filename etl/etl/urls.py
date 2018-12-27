@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('etlapp/', include('etlapp.urls')),
+    path('etlapp/', include(('etlapp.urls', 'etlapp'), namespace='etlapp')),
+    # path('static/', include(('etlapp.urls', 'etlapp'), namespace='static_etlapp')),
     path('admin/', admin.site.urls),
 ]
