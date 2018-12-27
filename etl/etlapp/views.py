@@ -98,3 +98,16 @@ def generate_txt(product, file_path):
         file.write("Gwarancja: " + product.guaranty + "\n")
         file.write("Inne: " + product.other_info + "\n")
         file.write("Data publikacji w bazie: " + str(product.pub_date) + "\n")
+
+def clear_database(request):
+    if request.method == "POST":
+        summary = "Baza danych została wyczyszczona. Usunięto " + str(len(Products.objects.all())) + " rekordów.\n"
+        Products.objects.all().delete()
+
+        data = {
+            summary:summary,
+        }
+
+        return JsonResponse(data)
+
+    return render(request, 'etlapp/index.html')

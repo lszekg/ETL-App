@@ -1,19 +1,19 @@
-Produkt: Domestos
+Produkt: Car1
 
-Id bazy danych: 2
-Id OPONEO: 234
-Producent: Ajax
-Cena: 23PLN
-Typ pojazdu: rydwan
-Sezon: lato
-Szerokość: 6mm
-Rozmiar: 0,5m
-Homologacja: tak
-Indeks prędkości: 32
-Indeks nośności: 5
-Etykieta UE: 16
-Rok produkcji: 2013
-Kraj produkcji: Polska też
-Gwarancja: owszem
-Inne: wio!
-Data publikacji w bazie: 2018-12-16 18:08:15+00:00
+Id bazy danych: 1
+Id OPONEO: 1
+Producent: Toyota
+Cena: 15PLN
+Typ pojazdu: kombi
+Sezon: zima
+Szerokość: 2mm
+Rozmiar: 2,5m
+Homologacja: high
+Indeks prędkości: 500km/h
+Indeks nośności: 1000kg
+Etykieta UE: low
+Rok produkcji: 1996
+Kraj produkcji: Polska oczywiscie
+Gwarancja: yes
+Inne: bardzo dobre auto
+Data publikacji w bazie: 2018-12-16 15:38:26+00:00

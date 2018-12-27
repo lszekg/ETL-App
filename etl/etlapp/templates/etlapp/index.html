@@ -59,7 +59,7 @@
   </div>
 
   <br>
-  <form>
+  
     <div class="mx-auto" style="width:350px">
       <div>
         <button class="btn btn-rep btn-block" id="clicker" href="#">
@@ -68,15 +68,15 @@
         <a href="#" id="rap1"></a>
       </div>
     </div>
-  </form>
+  
 
   <br>
 
-  <form>
+ 
     <div class="mx-auto" style="width:350px">
       <button class="btn btn-danger btn-block" id="clearBase">CZYŚĆ BAZĘ</button>
     </div>
-  </form>
+
 
   <br>
 
@@ -134,7 +134,7 @@
           </tbody>
         </table>
       {% else %}
-     <p>Brak danych.</p>
+     <p>Brak danych do wyświetlenia.</p>
     {% endif %}
   </div>
 
@@ -174,6 +174,23 @@
               $('.save-txt').attr("href", "{% static 'etlapp/files_from_database/product.txt' %}");
               $('.save-txt').attr('download', "product.txt");
               document.getElementsByClassName('save-txt')[0].click();
+            }
+          });
+    });
+  </script>
+
+  <script>
+    $('#clearBase').click(function(){
+        $.ajax({
+          type: "POST",
+          url: "{% url 'etlapp:clear_database' %}",
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+          },
+          success: function(data){
+            $.each(data, function( index, value ){
+                $("#feedback").val(value);
+            });
             }
           });
     });
