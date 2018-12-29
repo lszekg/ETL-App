@@ -81,61 +81,61 @@
   <br>
 
   <div class="mx-auto" id="refreshTable">
-    {% if products_list %}
-        <table class="table table-hover table-sm" id="baseTable">
-          <thead class="thead-dark">
-            <tr>
-              <th>ID BD</th>
-              <th>Producent</th>
-              <th>Nazwa</th>
-              <th>Cena</th>
-              <th>Typ pojazdu</th>
-              <th>Sezon</th>
-              <th>Szerokość</th>
-              <th>Rozmiar</th>
-              <th>Homologacja</th>
-              <th>Indeks prędkości</th>
-              <th>Indeks nośności</th>
-              <th>Etykieta UE</th>
-              <th>Rok produkcji</th>
-              <th>Kraj produkcji</th>
-              <th>Gwarancja</th>
-              <th>Inne</th>
-              <th>Data publikacji w bazie</th>
-              <th>POBIERZ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in products_list %}
-            <tr>
-              <th>{{ product.id }}</th>
-              <th>{{ product.Manufacturer }}</th>
-              <th>{{ product.Name }}</th>
-              <th>{{ product.Price }}</th>
-              <th>{{ product.Car_type }}</th>
-              <th>{{ product.season }}</th>
-              <th>{{ product.tire_width }}</th>
-              <th>{{ product.size }}</th>
-              <th>{{ product.approval }}</th>
-              <th>{{ product.speed_index }}</th>
-              <th>{{ product.weight_index }}</th>
-              <th>{{ product.sound_index }}</th>
-              <th>{{ product.production_year }}</th>
-              <th>{{ product.country_of_origin }}</th>
-              <th>{{ product.guaranty }}</th>
-              <th>{{ product.other_info }}</th>
-              <th>{{ product.pub_date }}</th>
-              <th>
-                <button class="btn downloadFile" id="clickTxt" name={{ product.id }}>.TXT</button>
-                <a href="#" class='save-txt'></a>
-              </th>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-     <p>Brak danych do wyświetlenia.</p>
-    {% endif %}
+      {% if products_list %}
+          <table class="table table-hover table-sm" id="baseTable">
+            <thead class="thead-dark">
+              <tr>
+                <th>ID BD</th>
+                <th>Producent</th>
+                <th>Nazwa</th>
+                <th>Cena</th>
+                <th>Typ pojazdu</th>
+                <th>Sezon</th>
+                <th>Szerokość</th>
+                <th>Rozmiar</th>
+                <th>Homologacja</th>
+                <th>Indeks prędkości</th>
+                <th>Indeks nośności</th>
+                <th>Etykieta UE</th>
+                <th>Rok produkcji</th>
+                <th>Kraj produkcji</th>
+                <th>Gwarancja</th>
+                <th>Inne</th>
+                <th>Data publikacji w bazie</th>
+                <th>POBIERZ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products_list %}
+              <tr>
+                <th>{{ product.id }}</th>
+                <th>{{ product.Manufacturer }}</th>
+                <th>{{ product.Name }}</th>
+                <th>{{ product.Price }}</th>
+                <th>{{ product.Car_type }}</th>
+                <th>{{ product.season }}</th>
+                <th>{{ product.tire_width }}</th>
+                <th>{{ product.size }}</th>
+                <th>{{ product.approval }}</th>
+                <th>{{ product.speed_index }}</th>
+                <th>{{ product.weight_index }}</th>
+                <th>{{ product.sound_index }}</th>
+                <th>{{ product.production_year }}</th>
+                <th>{{ product.country_of_origin }}</th>
+                <th>{{ product.guaranty }}</th>
+                <th>{{ product.other_info }}</th>
+                <th>{{ product.pub_date }}</th>
+                <th>
+                  <button class="btn downloadFile" id="clickTxt" name={{ product.id }}>.TXT</button>
+                  <a href="#" class='save-txt'></a>
+                </th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+      <p>Brak danych do wyświetlenia.</p>
+      {% endif %}
   </div>
 
   <script>
@@ -201,10 +201,11 @@
     setInterval(function() {
         $.ajax({
             type: "GET",
-            url: "{% url 'etlapp:refresh_table' %}",  // URL to your view that serves new info
+            url: "{% url 'etlapp:refresh_table' %}",
             data: {'append_increment': append_increment},
         })
         .done(function(response) {
+            $('#refreshTable').empty();
             $('#refreshTable').append(response);
             append_increment += 10;
         });

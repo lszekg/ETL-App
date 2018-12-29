@@ -113,7 +113,7 @@ def clear_database(request):
     return render(request, 'etlapp/index.html')
 
 def refresh_table(request):
-    increment = int(request.GET['increment'])
-    increment_to = increment + 10
-    products_list = Products.objects.filter(owner=request.user).order_by('-pub_date')[increment:increment_to]
-    return render(request, 'refresh_table.html', {'products_list': products_list})
+    increment = int(request.GET['append_increment'])
+    #increment_to = increment + 10
+    products_list = Products.objects.all().order_by('-pub_date')
+    return render(request, 'etlapp/refresh_table.html', {'products_list': products_list})
