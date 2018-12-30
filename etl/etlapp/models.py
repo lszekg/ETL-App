@@ -1,7 +1,7 @@
 from django.db import models
 
 class Products(models.Model):
-    ProductID = models.IntegerField(null=True, blank=True)
+    ProductID = models.CharField(max_length=200, null=True, blank=True)
     Manufacturer = models.CharField(max_length=200, null=True, blank=True)
     Name = models.CharField(max_length=200, null=True, blank=True)
     Price = models.CharField(max_length=200, null=True, blank=True)

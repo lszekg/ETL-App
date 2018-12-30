@@ -2,10 +2,12 @@ import time
 import requests
 from bs4 import BeautifulSoup as Bs
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 import re
 
 from django.db import models
-from .models import Products
+from etlapp.models import Products
 
 class Tire:
     def __init__(self, tire_dict):
@@ -65,7 +67,10 @@ def extract_data(link, data_list):
 def extract(data_list, width):
     t = time.time()
     link_width = re.sub("\.", "-", width)
-    driver = webdriver.Chrome('/home/sqrtek/Pobrane/chromedriver')
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-gpu")
+    driver = webdriver.Chrome(chrome_options=chrome_options)
     main_address = "https://www.oponeo.pl/wybierz-opony/"
     driver.get(main_address)
     json = {"productKindId": 2, "vehicleKind": 1, "tireWidth": width, "producersIDs": None, "seasonID": 0,
@@ -122,26 +127,26 @@ def load(data):
         p = Products(ProductID=obj.ID, Manufacturer=obj.manufacturer, Name=obj.name, Price=obj.price, Car_type=obj.car_type, season=obj.season, approval=obj.approval, speed_index=obj.speed_index, weight_index=obj.weight_index, sound_index=obj.sound_index, production_year=obj.production_year, guaranty=obj.guaranty, other_info=obj.other_info)
         p.save()
 
-tire_widths = get_tire_widths()
-tires = list()
-# Here query user for a desired width. Widths are contained within tire_widths list. They are in string format.
-width = tire_widths[16]
-print(width)
-# Extract takes empty list to put records in, and width that is to be searched for. Returns time it took to complete the
-# query. The list itself, as a mutable object is filled with records, without the need for explicitly returning it.
-extract_time = extract(tires, width)
-print("Extract ended. Parsed " + str(len(tires)) + " records, took " + str(int(extract_time/60)) + "min " + str(int(extract_time%60)) + "sec.")
-# Transform again takes the list, this time filled with records, and transforms it into two-element list. Zeroth element
-# contains the list of objects to be used in the load function, and the first element contains time the function took to
-# complete.
-data = transform(tires)
-print("Transform ended. Prepared " + str(len(data[0])) + " objects, took " + str(int(data[1]/60)) + "min " + str(int(data[1]%60)) + "sec.")
-#print(*data[0]['manufacturer'], sep="\n")
-load(data)
-print("Loading data to DjangoDB ended.")
-# You can try fiddling with it, but what is important:
-# 1. Implement load() function, and etl() function combining three earlier functions into one.
-# 2. Implement query for the user input regarding the desired tire width.
-# 3. Implement function for browsing database, as well as function allowing to download whole or
-#    elements of the database to users hard-drive in csv format.
-# 4. Connect the frontend to the backend.
+# tire_widths = get_tire_widths()
+# tires = list()
+# # Here query user for a desired width. Widths are contained within tire_widths list. They are in string format.
+# width = tire_widths[16]
+# print(width)
+# # Extract takes empty list to put records in, and width that is to be searched for. Returns time it took to complete the
+# # query. The list itself, as a mutable object is filled with records, without the need for explicitly returning it.
+# extract_time = extract(tires, width)
+# print("Extract ended. Parsed " + str(len(tires)) + " records, took " + str(int(extract_time/60)) + "min " + str(int(extract_time%60)) + "sec.")
+# # Transform again takes the list, this time filled with records, and transforms it into two-element list. Zeroth element
+# # contains the list of objects to be used in the load function, and the first element contains time the function took to
+# # complete.
+# data = transform(tires)
+# print("Transform ended. Prepared " + str(len(data[0])) + " objects, took " + str(int(data[1]/60)) + "min " + str(int(data[1]%60)) + "sec.")
+# #print(*data[0]['manufacturer'], sep="\n")
+# load(data)
+# print("Loading data to DjangoDB ended.")
+# # You can try fiddling with it, but what is important:
+# # 1. Implement load() function, and etl() function combining three earlier functions into one.
+# # 2. Implement query for the user input regarding the desired tire width.
+# # 3. Implement function for browsing database, as well as function allowing to download whole or
+# #    elements of the database to users hard-drive in csv format.
+# # 4. Connect the frontend to the backend.

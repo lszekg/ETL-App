@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -23,10 +24,9 @@
 
   <div class="mx-auto" style="width:350px">
     <select name="width" style="width:350px">
-      <option>xxx</option>
-      <!--{% for width in widths_list %}
+      {% for width in widths_list %}
         <option>{{ width }}</option>
-      {% endfor %}-->
+      {% endfor %}
     </select>
   </div>
 
@@ -34,16 +34,16 @@
 
   <div class="mx-auto" style="width:350px">
     <div class="btn-group">
-      <button class="btn" onclick="test1.py" id="extract">EXTRACT</button>
-      <button class="btn" id="transform">TRANSFORM</button>
-      <button class="btn" id="load">LOAD</button>
+      <button class="btn etlButton" id="extract">EXTRACT</button>
+      <button class="btn etlButton" id="transform" disabled>TRANSFORM</button>
+      <button class="btn etlButton" id="load" disabled>LOAD</button>
     </div>
   </div>
 
   <br>
 
   <div class="mx-auto" style="width:350px">
-    <button class="btn btn-block" id="etl">ETL</button>
+    <button class="btn btn-block etlButton" id="etl">ETL</button>
   </div>
 
   <br>
@@ -59,75 +59,194 @@
   </div>
 
   <br>
-
-  <div class="mx-auto" style="width:350px">
-    <div>
-      <button class="btn btn-rep btn-block" id="rap1">POBIERZ BAZĘ W FORMACIE .CSV</button>
+  
+    <div class="mx-auto" style="width:350px">
+      <div>
+        <button class="btn btn-rep btn-block" id="clicker" href="#">
+          POBIERZ BAZĘ W FORMACIE .CSV
+        </button>
+        <a href="#" id="rap1"></a>
+      </div>
     </div>
-  </div>
+  
 
   <br>
 
-  <div class="mx-auto" style="width:350px">
-    <button class="btn btn-danger btn-block" id="clearBase">CZYŚĆ BAZĘ</button>
-  </div>
+ 
+    <div class="mx-auto" style="width:350px">
+      <button class="btn btn-danger btn-block" id="clearBase">CZYŚĆ BAZĘ</button>
+    </div>
+
 
   <br>
 
-  <div class="mx-auto">
-    {% if products_list %}
-        <table class="table table-hover table-sm" id="baseTable">
-          <thead class="thead-dark">
-            <tr>
-              <th>ID BD</th>
-              <th>Producent</th>
-              <th>Nazwa</th>
-              <th>Cena</th>
-              <th>Typ pojazdu</th>
-              <th>Sezon</th>
-              <th>Szerokość</th>
-              <th>Rozmiar</th>
-              <th>Homologacja</th>
-              <th>Indeks prędkości</th>
-              <th>Indeks nośności</th>
-              <th>Etykieta UE</th>
-              <th>Rok produkcji</th>
-              <th>Kraj produkcji</th>
-              <th>Gwarancja</th>
-              <th>Inne</th>
-              <th>Data publikacji w bazie</th>
-              <th>POBIERZ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for product in products_list %}
-            <tr>
-              <th>{{ product.id }}</th>
-              <th>{{ product.Manufacturer }}</th>
-              <th>{{ product.Name }}</th>
-              <th>{{ product.Price }}</th>
-              <th>{{ product.Car_type }}</th>
-              <th>{{ product.season }}</th>
-              <th>{{ product.tire_width }}</th>
-              <th>{{ product.size }}</th>
-              <th>{{ product.approval }}</th>
-              <th>{{ product.speed_index }}</th>
-              <th>{{ product.weight_index }}</th>
-              <th>{{ product.sound_index }}</th>
-              <th>{{ product.production_year }}</th>
-              <th>{{ product.country_of_origin }}</th>
-              <th>{{ product.guaranty }}</th>
-              <th>{{ product.other_info }}</th>
-              <th>{{ product.pub_date }}</th>
-              <th><button class="btn" id="txt">.TXT</button></th>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-     <p>Brak danych.</p>
-    {% endif %}
+  <div class="mx-auto" id="refreshTable">
+      {% if products_list %}
+          <table class="table table-hover table-sm" id="baseTable">
+            <thead class="thead-dark">
+              <tr>
+                <th>ID BD</th>
+                <th>Producent</th>
+                <th>Nazwa</th>
+                <th>Cena</th>
+                <th>Typ pojazdu</th>
+                <th>Sezon</th>
+                <th>Szerokość</th>
+                <th>Rozmiar</th>
+                <th>Homologacja</th>
+                <th>Indeks prędkości</th>
+                <th>Indeks nośności</th>
+                <th>Etykieta UE</th>
+                <th>Rok produkcji</th>
+                <th>Kraj produkcji</th>
+                <th>Gwarancja</th>
+                <th>Inne</th>
+                <th>Data publikacji w bazie</th>
+                <th>POBIERZ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products_list %}
+              <tr>
+                <th>{{ product.id }}</th>
+                <th>{{ product.Manufacturer }}</th>
+                <th>{{ product.Name }}</th>
+                <th>{{ product.Price }}</th>
+                <th>{{ product.Car_type }}</th>
+                <th>{{ product.season }}</th>
+                <th>{{ product.tire_width }}</th>
+                <th>{{ product.size }}</th>
+                <th>{{ product.approval }}</th>
+                <th>{{ product.speed_index }}</th>
+                <th>{{ product.weight_index }}</th>
+                <th>{{ product.sound_index }}</th>
+                <th>{{ product.production_year }}</th>
+                <th>{{ product.country_of_origin }}</th>
+                <th>{{ product.guaranty }}</th>
+                <th>{{ product.other_info }}</th>
+                <th>{{ product.pub_date }}</th>
+                <th>
+                  <button class="btn downloadFile" id="clickTxt" name={{ product.id }}>.TXT</button>
+                  <a href="#" class='save-txt'></a>
+                </th>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+      <p>Brak danych do wyświetlenia.</p>
+      {% endif %}
   </div>
+
+  <script>
+    $('#clicker').click(function(){
+        var selected_product = $(this).text();
+        $.ajax({
+          type: "POST",
+          url: "{% url 'etlapp:save_file' %}",
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            selected_product:selected_product,
+          },
+          success: function(data){
+                $("#rap1").attr("href", "{% static 'etlapp/files_from_database/oponeo.csv' %}");
+                $('#rap1').attr('download', "oponeo.csv");
+                document.getElementById("rap1").click();
+            }
+          });
+    });
+  </script>
+
+  <script>    
+    $(".downloadFile").click(function(){
+      var product_id = $(this.id);
+      var selected_product = $(this).text();
+      var selected_id = $(this).attr('name');
+        $.ajax({
+          type: "POST",
+          url: "{% url 'etlapp:save_file' %}",
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            selected_product:selected_product,
+            product_id:selected_id,
+          },
+          success: function(data){
+              $('.save-txt').attr("href", "{% static 'etlapp/files_from_database/product.txt' %}");
+              $('.save-txt').attr('download', "product.txt");
+              document.getElementsByClassName('save-txt')[0].click();
+            }
+          });
+    });
+  </script>
+
+  <script>
+    $('#clearBase').click(function(){
+        $.ajax({
+          type: "POST",
+          url: "{% url 'etlapp:clear_database' %}",
+          data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+          },
+          success: function(data){
+            $.each(data, function( index, value ){
+                $("#feedback").val(value);
+            });
+            }
+          });
+    });
+  </script>
+
+  <script>
+    var append_increment = 0;
+    setInterval(function() {
+        $.ajax({
+            type: "GET",
+            url: "{% url 'etlapp:refresh_table' %}",
+            data: {'append_increment': append_increment},
+        })
+        .done(function(response) {
+            $('#refreshTable').empty();
+            $('#refreshTable').append(response);
+            append_increment += 10;
+        });
+    }, 10000)
+  </script>
+
+ <script>
+  $('.etlButton').click(function(){
+    var button_text = $(this).text();
+    
+    $(this).attr("disabled", true);
+    $('#extract').attr("disabled", true);
+    $('#etl').attr("disabled", true);
+    
+      $.ajax({
+        type: "POST",
+        url: "{% url 'etlapp:dummy' %}",
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          button_text:button_text,
+        },
+        success: function(data){
+          $.each(data, function( index, value ){
+              $("#feedback").val(value);
+          });
+
+            if (button_text === "EXTRACT") {
+              $('#transform').attr("disabled", false); 
+            } else if (button_text === "TRANSFORM") {
+              $('#load').attr("disabled", false);
+            } else {
+              $('#load').attr("disabled", true);
+            }
+
+          }
+        });
+
+    
+
+  });
+  </script> 
 
   </body>
 </html>
