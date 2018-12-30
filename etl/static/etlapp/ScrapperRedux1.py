@@ -66,7 +66,7 @@ def extract_data(link, data_list):
 
 def extract(data_list, width):
     t = time.time()
-    link_width = re.sub("\.", "-", width)
+    link_width = re.sub(r"\.", "-", width)
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
@@ -79,11 +79,11 @@ def extract(data_list, width):
     ratios = requests.post(address, json=json).json()["d"]
     address = "https://www.oponeo.pl/WS/ShopService.svc/GetTireDiameters"
     for ratio in ratios:
-        link_ratio = re.sub("\.", "-", ratio)
+        link_ratio = re.sub(r"\.", "-", ratio)
         json["tireRatio"] = ratio
         diameters = requests.post(address, json=json).json()["d"]
         for diameter in diameters:
-            link_diameter = re.sub("\.", "-", diameter)
+            link_diameter = re.sub(r"\.", "-", diameter)
             sub_address = main_address + "r=1/" + link_width
             if ratio == "-" or ratio == "0":
                 sub_address += "-r" + link_diameter + "/"
@@ -113,7 +113,7 @@ def transform(data_list):
     data = list()
     for product in data_list:
         for i in product.keys():
-            product[i] = re.sub('<.*>| {2,}|szczegóły|[^ ,./=\-\w]', "", product[i], re.M)
+            product[i] = re.sub(r'<.*>| {2,}|szczegóły|[^ ,./=\-\w]', r"", product[i], re.M)
     for i in range(len(data_list)-1):
         for j in range(len(data_list)-1):
             if data_list[i] == data_list[j] and i != j:

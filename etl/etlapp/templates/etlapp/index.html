@@ -23,7 +23,7 @@
   <br>
 
   <div class="mx-auto" style="width:350px">
-    <select name="width" style="width:350px">
+    <select name="width" style="width:350px" id="dropdownWidth">
       {% for width in widths_list %}
         <option>{{ width }}</option>
       {% endfor %}
@@ -215,6 +215,7 @@
  <script>
   $('.etlButton').click(function(){
     var button_text = $(this).text();
+    var dropdown_id = $('#dropdownWidth').find(":selected").text()
     
     $(this).attr("disabled", true);
     $('#extract').attr("disabled", true);
@@ -226,6 +227,7 @@
         data: {
           csrfmiddlewaretoken: '{{ csrf_token }}',
           button_text:button_text,
+          dropdown_id:dropdown_id,
         },
         success: function(data){
           $.each(data, function( index, value ){

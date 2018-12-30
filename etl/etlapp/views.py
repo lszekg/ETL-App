@@ -5,11 +5,11 @@ from openpyxl import Workbook
 
 from .models import Products
 
-from static.etlapp.ScrapperRedux1 import get_tire_widths
+from static.etlapp import ScrapperRedux1
 
 def index(request):
     products_list = Products.objects.order_by('-pub_date')
-    widths_list = get_tire_widths()
+    widths_list = ScrapperRedux1.get_tire_widths()
     # template = loader.get_template('etlapp/index.html')
     context = {
         'products_list': products_list,
@@ -121,6 +121,7 @@ def refresh_table(request):
 
 def dummy(request):
     if request.method == "POST":
+        tires = list()
         data = {}
 
         if request.POST['button_text'] == "ETL":
@@ -130,7 +131,12 @@ def dummy(request):
             }
 
         elif request.POST['button_text'] == "EXTRACT":
-            summary = "Kliknięto przycisk EXTRACT"            
+            tire_widths = ScrapperRedux1.get_tire_widths()
+            width = tire_widths.index(request.POST['dropdown_id'])
+
+            extract_time = ScrapperRedux1.extract(tires, width)
+
+            summary = "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(extract_time/60)) + "min " + str(int(extract_time%60)) + "sekund."
           
             data = {
                 summary:summary,
