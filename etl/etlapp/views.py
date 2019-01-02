@@ -132,7 +132,8 @@ def dummy(request):
 
         elif request.POST['button_text'] == "EXTRACT":
             tire_widths = ScrapperRedux1.get_tire_widths()
-            width = tire_widths.index(request.POST['dropdown_id'])
+            width = request.POST['dropdown_id']
+            print(type(width))
 
             extract_time = ScrapperRedux1.extract(tires, width)
 

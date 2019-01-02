@@ -1,13 +1,11 @@
 import time
 import requests
+import re
 from bs4 import BeautifulSoup as Bs
 from selenium import webdriver
+from selenium.common import exceptions
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.chrome.options import Options
-
-import re
-
-from django.db import models
-from etlapp.models import Products
 
 class Tire:
     def __init__(self, tire_dict):
@@ -28,11 +26,23 @@ class Tire:
         self.other_info = tire_dict.get("Inne:", "")
 
     def __str__(self):
-        string = "<<\n"
-        for attr, value in self.__dict__.items():
-            string += (attr + " : " + value + "\n")
-        string += ">>"
+        string = '"'
+        string += '","'.join(map(str, self.__dict__.values()))
+        string += '"'
         return string
+
+    def __eq__(self, other):
+        if isinstance(other, Tire):
+            return self.__hash__() == other.__hash__()
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return hash(self.ID)
+
 
 def get_tire_widths():
     url = "https://www.oponeo.pl/wybierz-opony/"
@@ -43,8 +53,23 @@ def get_tire_widths():
     widths.pop(0)
     return widths
 
+def find_and_get_product_instance(driver):
+    element = driver.find_elements_by_id("productName")
+    if element:
+        return element
+    else:
+        return False
+
+
 def extract_data(link, data_list):
-    raw_html = requests.get("https://www.oponeo.pl" + link).content
+    while True:
+        try:
+            raw_html = requests.get("https://www.oponeo.pl" + link).content
+        except requests.exceptions.RequestException:
+            print("Time Out")
+            time.sleep(5)
+            continue
+        break
     html = Bs(raw_html, features="html.parser")
     opinion = {}
     opinion.update({"ID" : re.sub("/.*/|#.*$", "", link)})
@@ -66,87 +91,100 @@ def extract_data(link, data_list):
 
 def extract(data_list, width):
     t = time.time()
-    link_width = re.sub(r"\.", "-", width)
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
-    driver = webdriver.Chrome(chrome_options=chrome_options)
+    driver = webdriver.Chrome(options=chrome_options)
     main_address = "https://www.oponeo.pl/wybierz-opony/"
     driver.get(main_address)
+    WebDriverWait(driver, 5)
+    driver.find_element_by_id("cookiePolicyTooltip").find_element_by_class_name("button").click()
+    select = Select(driver.find_element_by_name("_ctTS_ddlDimWidth"))
+    select.select_by_visible_text(width)
+    WebDriverWait(driver, 5)
     json = {"productKindId": 2, "vehicleKind": 1, "tireWidth": width, "producersIDs": None, "seasonID": 0,
             "isTireOnOponeoWarehouse": False}
     address = "https://www.oponeo.pl/WS/ShopService.svc/GetTireRatios"
     ratios = requests.post(address, json=json).json()["d"]
-    address = "https://www.oponeo.pl/WS/ShopService.svc/GetTireDiameters"
     for ratio in ratios:
-        link_ratio = re.sub(r"\.", "-", ratio)
+        if re.match("^[0-9]*\.[0-9]$", ratio) is not None:
+            continue
+        while True:
+            try:
+                WebDriverWait(driver, 10)
+                Select(driver.find_element_by_name("_ctTS_ddlDimRatio")).select_by_value(ratio)
+            except exceptions.WebDriverException:
+                print("Stale element - ratios")
+                continue
+            break
+        address = "https://www.oponeo.pl/WS/ShopService.svc/GetTireDiameters"
         json["tireRatio"] = ratio
         diameters = requests.post(address, json=json).json()["d"]
         for diameter in diameters:
-            link_diameter = re.sub(r"\.", "-", diameter)
-            sub_address = main_address + "r=1/" + link_width
-            if ratio == "-" or ratio == "0":
-                sub_address += "-r" + link_diameter + "/"
-            else:
-                sub_address += "-" + link_ratio + "-r" + link_diameter + "/"
-            if width == "37" and ratio == "12.50" and diameter == "16":
-                sub_address = main_address  + "r=1/37-12-50-16"
-            driver.get(sub_address)
-            answer = requests.get(sub_address).content
+            while True:
+                try:
+                    WebDriverWait(driver, 10)
+                    old_value = driver.find_element_by_class_name('productName').text
+                except exceptions.WebDriverException:
+                    print("Stale element - old product name")
+                    continue
+                break
+            try:
+                Select(driver.find_element_by_name("_ctTS_ddlDimDiameter")).select_by_value(diameter)
+            except exceptions.WebDriverException:
+                print("Element not loaded - diameter.")
+                continue
+            for i in range(500):
+            # while True:
+                try:
+                    WebDriverWait(driver, 10)
+                    new_value = driver.find_element_by_class_name('productName').text
+                    assert new_value != old_value
+                except exceptions.WebDriverException:
+                    continue
+                except AssertionError:
+                    continue
+                break
+            answer = driver.page_source
             while True:
                 soup = Bs(answer, "html.parser")
                 products = soup.find_all("div", {"class": "product container"})
                 links = list(map(lambda x: x.find("a").get("href"), products))
                 [extract_data(link, data_list) for link in links]
-                if soup.find("a", {"id": "_ctPgrp_pgtnni"}) is not None:
-                    driver.get(sub_address)
-                    driver.execute_script("javascript:__doPostBack('_ctPgrp_pgtnni','')")
-                    answer = driver.page_source
-                else:
-                    driver.execute_script("javascript:__doPostBack('_ctPgrp_pgtffi','')")
+                while True:
+                    try:
+                        WebDriverWait(driver, 10)
+                        old_value = driver.find_element_by_class_name('productName').text
+                    except exceptions.WebDriverException:
+                        print("Stale element - old product name")
+                        continue
                     break
+                try:
+                    driver.find_element_by_id("_ctPgrp_pgtnni").click()
+                except exceptions.WebDriverException:
+                    break
+                while True:
+                    try:
+                        WebDriverWait(driver, 10)
+                        new_value = driver.find_element_by_class_name('productName').text
+                        assert new_value != old_value
+                    except exceptions.WebDriverException:
+                        continue
+                    except AssertionError:
+                        continue
+                    break
+                answer = driver.page_source
+                continue
+    print(data_list)
+    print(len(data_list))
     driver.close()
     return time.time() - t
 
 def transform(data_list):
     t = time.time()
-    data = list()
     for product in data_list:
         for i in product.keys():
-            product[i] = re.sub(r'<.*>| {2,}|szczegóły|[^ ,./=\-\w]', r"", product[i], re.M)
-    for i in range(len(data_list)-1):
-        for j in range(len(data_list)-1):
-            if data_list[i] == data_list[j] and i != j:
-                data.append(j)
-    map(lambda x: data_list.pop(x), data)
-    return [list(map(lambda x: Tire(x), data_list)), time.time() - t]
-
-
-def load(data):
-    for obj in data[0]:
-        p = Products(ProductID=obj.ID, Manufacturer=obj.manufacturer, Name=obj.name, Price=obj.price, Car_type=obj.car_type, season=obj.season, approval=obj.approval, speed_index=obj.speed_index, weight_index=obj.weight_index, sound_index=obj.sound_index, production_year=obj.production_year, guaranty=obj.guaranty, other_info=obj.other_info)
-        p.save()
-
-# tire_widths = get_tire_widths()
-# tires = list()
-# # Here query user for a desired width. Widths are contained within tire_widths list. They are in string format.
-# width = tire_widths[16]
-# print(width)
-# # Extract takes empty list to put records in, and width that is to be searched for. Returns time it took to complete the
-# # query. The list itself, as a mutable object is filled with records, without the need for explicitly returning it.
-# extract_time = extract(tires, width)
-# print("Extract ended. Parsed " + str(len(tires)) + " records, took " + str(int(extract_time/60)) + "min " + str(int(extract_time%60)) + "sec.")
-# # Transform again takes the list, this time filled with records, and transforms it into two-element list. Zeroth element
-# # contains the list of objects to be used in the load function, and the first element contains time the function took to
-# # complete.
-# data = transform(tires)
-# print("Transform ended. Prepared " + str(len(data[0])) + " objects, took " + str(int(data[1]/60)) + "min " + str(int(data[1]%60)) + "sec.")
-# #print(*data[0]['manufacturer'], sep="\n")
-# load(data)
-# print("Loading data to DjangoDB ended.")
-# # You can try fiddling with it, but what is important:
-# # 1. Implement load() function, and etl() function combining three earlier functions into one.
-# # 2. Implement query for the user input regarding the desired tire width.
-# # 3. Implement function for browsing database, as well as function allowing to download whole or
-# #    elements of the database to users hard-drive in csv format.
-# # 4. Connect the frontend to the backend.
+            product[i] = re.sub('<.*>| {2,}|szczegóły|[^ ,./=\-\w]', "", product[i], re.M)
+    data = list(map(lambda x: Tire(x), data_list))
+    data = list(set(data))
+    return [data, time.time() - t]
