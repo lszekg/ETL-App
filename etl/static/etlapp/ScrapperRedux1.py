@@ -6,6 +6,8 @@ from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.chrome.options import Options
+from django.db import models
+from etlapp.models import Products
 
 class Tire:
     def __init__(self, tire_dict):
@@ -188,3 +190,25 @@ def transform(data_list):
     data = list(map(lambda x: Tire(x), data_list))
     data = list(set(data))
     return [data, time.time() - t]
+
+def load(data, date):
+    t = time.time()
+    for obj in data:
+        p = Products(ProductID=obj.ID,
+                     Manufacturer=obj.manufacturer,
+                     Name=obj.name,
+                     Price=obj.price,
+                     Car_type=obj.car_type,
+                     season=obj.season,
+                     size=obj.size,
+                     approval=obj.approval,
+                     speed_index=obj.speed_index,
+                     weight_index=obj.weight_index,
+                     sound_index=obj.sound_index,
+                     production_year=obj.production_year,
+                     guaranty=obj.guaranty,
+                     other_info=obj.other_info,
+                     pub_date=date)
+        print("A")
+        p.save()
+    return time.time() - t

@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import datetime_safe
 
 class Products(models.Model):
     ProductID = models.CharField(max_length=200, null=True, blank=True)
@@ -7,7 +8,6 @@ class Products(models.Model):
     Price = models.CharField(max_length=200, null=True, blank=True)
     Car_type = models.CharField(max_length=200, null=True, blank=True)
     season = models.CharField(max_length=200, null=True, blank=True)
-    tire_width = models.CharField(max_length=200, null=True, blank=True)
     size = models.CharField(max_length=200, null=True, blank=True)
     approval = models.CharField(max_length=200, null=True, blank=True)
     speed_index = models.CharField(max_length=200, null=True, blank=True)
@@ -17,6 +17,6 @@ class Products(models.Model):
     country_of_origin = models.CharField(max_length=200, null=True, blank=True)
     guaranty = models.CharField(max_length=200, null=True, blank=True)
     other_info = models.TextField(null=True, blank=True)
-    pub_date = models.DateTimeField('date published')
+    pub_date = models.DateTimeField()
     def __str__(self):
         return (self.Manufacturer + " " + self.Name)

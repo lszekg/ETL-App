@@ -1,8 +1,8 @@
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from openpyxl import Workbook
-
 from .models import Products
 
 from static.etlapp import ScrapperRedux1
@@ -87,7 +87,6 @@ def generate_txt(product, file_path):
         file.write("Cena: " + product.Price + "\n")
         file.write("Typ pojazdu: " + product.Car_type + "\n")
         file.write("Sezon: " + product.season + "\n")
-        file.write("Szerokość: " + product.tire_width + "\n")
         file.write("Rozmiar: " + product.size + "\n")
         file.write("Homologacja: " + product.approval + "\n")
         file.write("Indeks prędkości: " + product.speed_index + "\n")
@@ -118,14 +117,24 @@ def refresh_table(request):
     products_list = Products.objects.all().order_by('-pub_date')
     return render(request, 'etlapp/refresh_table.html', {'products_list': products_list})
 
-
+tires = list()
+data_list = list()
+date = str(datetime.datetime.now())
 def dummy(request):
+    global data_list
+    global tires
     if request.method == "POST":
-        tires = list()
         data = {}
+        summary = ""
 
         if request.POST['button_text'] == "ETL":
-            summary = "Kliknięto przycisk ETL"            
+            width = request.POST['dropdown_id']
+            time = ScrapperRedux1.extract(tires, width)
+            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            data_list = ScrapperRedux1.transform(tires)
+            summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
+            time = ScrapperRedux1.load(data_list[0], date)
+            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data = {
                summary:summary,
             }
@@ -133,24 +142,22 @@ def dummy(request):
         elif request.POST['button_text'] == "EXTRACT":
             tire_widths = ScrapperRedux1.get_tire_widths()
             width = request.POST['dropdown_id']
-            print(type(width))
-
             extract_time = ScrapperRedux1.extract(tires, width)
-
-            summary = "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(extract_time/60)) + "min " + str(int(extract_time%60)) + "sekund."
-          
+            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(extract_time/60)) + " min " + str(int(extract_time%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
 
         elif request.POST['button_text'] == "TRANSFORM":
-            summary = "Kliknięto przycisk TRANSFORM"            
+            data_list = ScrapperRedux1.transform(tires)
+            summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
 
         else:
-            summary = "Kliknięto przycisk LOAD"            
+            time = ScrapperRedux1.load(data_list[0], date)
+            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
