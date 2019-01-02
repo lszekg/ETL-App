@@ -42,17 +42,16 @@ def generate_csv(Products, file_path):
     ws['E' + str(row_count)] = "Cena"
     ws['F' + str(row_count)] = "Typ pojazdu"
     ws['G' + str(row_count)] = "Sezon"
-    ws['H' + str(row_count)] = "Szerokość"
-    ws['I' + str(row_count)] = "Rozmiar"
-    ws['J' + str(row_count)] = "Homologacja"
-    ws['K' + str(row_count)] = "Indeks prędkości"
-    ws['L' + str(row_count)] = "Indeks nośności"
-    ws['M' + str(row_count)] = "Etykieta UE"
-    ws['N' + str(row_count)] = "Rok produkcji"
-    ws['O' + str(row_count)] = "Kraj produkcji"
-    ws['P' + str(row_count)] = "Gwarancja"
-    ws['Q' + str(row_count)] = "Inne"
-    ws['R' + str(row_count)] = "Data publikacji w bazie"
+    ws['H' + str(row_count)] = "Rozmiar"
+    ws['I' + str(row_count)] = "Homologacja"
+    ws['J' + str(row_count)] = "Indeks prędkości"
+    ws['K' + str(row_count)] = "Indeks nośności"
+    ws['L' + str(row_count)] = "Etykieta UE"
+    ws['M' + str(row_count)] = "Rok produkcji"
+    ws['N' + str(row_count)] = "Kraj produkcji"
+    ws['O' + str(row_count)] = "Gwarancja"
+    ws['P' + str(row_count)] = "Inne"
+    ws['Q' + str(row_count)] = "Data publikacji w bazie"
     row_count += 1
 
     for product in Products:
@@ -63,17 +62,16 @@ def generate_csv(Products, file_path):
         ws['E' + str(row_count)] = product.Price
         ws['F' + str(row_count)] = product.Car_type
         ws['G' + str(row_count)] = product.season
-        ws['H' + str(row_count)] = product.tire_width
-        ws['I' + str(row_count)] = product.size
-        ws['J' + str(row_count)] = product.approval
-        ws['K' + str(row_count)] = product.speed_index
-        ws['L' + str(row_count)] = product.weight_index
-        ws['M' + str(row_count)] = product.sound_index
-        ws['N' + str(row_count)] = product.production_year
-        ws['O' + str(row_count)] = product.country_of_origin
-        ws['P' + str(row_count)] = product.guaranty
-        ws['Q' + str(row_count)] = product.other_info
-        ws['R' + str(row_count)] = product.pub_date
+        ws['H' + str(row_count)] = product.size
+        ws['I' + str(row_count)] = product.approval
+        ws['J' + str(row_count)] = product.speed_index
+        ws['K' + str(row_count)] = product.weight_index
+        ws['L' + str(row_count)] = product.sound_index
+        ws['M' + str(row_count)] = product.production_year
+        ws['N' + str(row_count)] = product.country_of_origin
+        ws['O' + str(row_count)] = product.guaranty
+        ws['P' + str(row_count)] = product.other_info
+        ws['Q' + str(row_count)] = product.pub_date
         row_count += 1
 
     wb.save(file_path)
