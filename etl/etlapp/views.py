@@ -128,7 +128,7 @@ def dummy(request):
         if request.POST['button_text'] == "ETL":
             width = request.POST['dropdown_id']
             time = ScrapperRedux1.extract(tires, width)
-            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data_list = ScrapperRedux1.transform(tires)
             summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
             time = ScrapperRedux1.load(data_list[0], date)
@@ -141,7 +141,7 @@ def dummy(request):
             tire_widths = ScrapperRedux1.get_tire_widths()
             width = request.POST['dropdown_id']
             extract_time = ScrapperRedux1.extract(tires, width)
-            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(extract_time/60)) + " min " + str(int(extract_time%60)) + " sekund.\n"
+            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(extract_time/60)) + " min " + str(int(extract_time%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
