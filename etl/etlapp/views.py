@@ -1,8 +1,8 @@
+import datetime
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from openpyxl import Workbook
-
 from .models import Products
 
 from static.etlapp import ScrapperRedux1
@@ -20,13 +20,18 @@ def index(request):
 
 def save_file(request):
     if request.method == "POST":
-        data = {}
+        data = {}        
         if request.POST['selected_product'] == ".TXT":
             product_id = Products.objects.get(id=request.POST['product_id'])
-            generate_txt(product_id, 'static/etlapp/files_from_database/product.txt')
+            txt_path = 'static/etlapp/files_from_database/dane.txt'
+            generate_txt(product_id, txt_path)
+
+            data = {
+                "dfile": product_id.Name
+            }
         else:
             generate_csv(Products.objects.all(), 'static/etlapp/files_from_database/oponeo.csv')
-            return JsonResponse(data)
+        return JsonResponse(data)
 
     return render(request, 'etlapp/index.html')
 
@@ -42,17 +47,16 @@ def generate_csv(Products, file_path):
     ws['E' + str(row_count)] = "Cena"
     ws['F' + str(row_count)] = "Typ pojazdu"
     ws['G' + str(row_count)] = "Sezon"
-    ws['H' + str(row_count)] = "Szerokość"
-    ws['I' + str(row_count)] = "Rozmiar"
-    ws['J' + str(row_count)] = "Homologacja"
-    ws['K' + str(row_count)] = "Indeks prędkości"
-    ws['L' + str(row_count)] = "Indeks nośności"
-    ws['M' + str(row_count)] = "Etykieta UE"
-    ws['N' + str(row_count)] = "Rok produkcji"
-    ws['O' + str(row_count)] = "Kraj produkcji"
-    ws['P' + str(row_count)] = "Gwarancja"
-    ws['Q' + str(row_count)] = "Inne"
-    ws['R' + str(row_count)] = "Data publikacji w bazie"
+    ws['H' + str(row_count)] = "Rozmiar"
+    ws['I' + str(row_count)] = "Homologacja"
+    ws['J' + str(row_count)] = "Indeks prędkości"
+    ws['K' + str(row_count)] = "Indeks nośności"
+    ws['L' + str(row_count)] = "Etykieta UE"
+    ws['M' + str(row_count)] = "Rok produkcji"
+    ws['N' + str(row_count)] = "Kraj produkcji"
+    ws['O' + str(row_count)] = "Gwarancja"
+    ws['P' + str(row_count)] = "Inne"
+    ws['Q' + str(row_count)] = "Data publikacji w bazie"
     row_count += 1
 
     for product in Products:
@@ -63,40 +67,38 @@ def generate_csv(Products, file_path):
         ws['E' + str(row_count)] = product.Price
         ws['F' + str(row_count)] = product.Car_type
         ws['G' + str(row_count)] = product.season
-        ws['H' + str(row_count)] = product.tire_width
-        ws['I' + str(row_count)] = product.size
-        ws['J' + str(row_count)] = product.approval
-        ws['K' + str(row_count)] = product.speed_index
-        ws['L' + str(row_count)] = product.weight_index
-        ws['M' + str(row_count)] = product.sound_index
-        ws['N' + str(row_count)] = product.production_year
-        ws['O' + str(row_count)] = product.country_of_origin
-        ws['P' + str(row_count)] = product.guaranty
-        ws['Q' + str(row_count)] = product.other_info
-        ws['R' + str(row_count)] = product.pub_date
+        ws['H' + str(row_count)] = product.size
+        ws['I' + str(row_count)] = product.approval
+        ws['J' + str(row_count)] = product.speed_index
+        ws['K' + str(row_count)] = product.weight_index
+        ws['L' + str(row_count)] = product.sound_index
+        ws['M' + str(row_count)] = product.production_year
+        ws['N' + str(row_count)] = product.country_of_origin
+        ws['O' + str(row_count)] = product.guaranty
+        ws['P' + str(row_count)] = product.other_info
+        ws['Q' + str(row_count)] = product.pub_date
         row_count += 1
 
     wb.save(file_path)
 
 def generate_txt(product, file_path):
     with open(file_path, 'w', encoding='utf-8') as file:
-        file.write("Produkt: " + product.Name + '\n\n')
+        file.write("Produkt: " + str(product.Name) + '\n\n')
         file.write("Id bazy danych: " + str(product.id) + "\n")
         file.write("Id OPONEO: " + str(product.ProductID) + "\n")
-        file.write("Producent: " + product.Manufacturer + "\n")
-        file.write("Cena: " + product.Price + "\n")
-        file.write("Typ pojazdu: " + product.Car_type + "\n")
-        file.write("Sezon: " + product.season + "\n")
-        file.write("Szerokość: " + product.tire_width + "\n")
-        file.write("Rozmiar: " + product.size + "\n")
-        file.write("Homologacja: " + product.approval + "\n")
-        file.write("Indeks prędkości: " + product.speed_index + "\n")
-        file.write("Indeks nośności: " + product.weight_index + "\n")
-        file.write("Etykieta UE: " + product.sound_index + "\n")
-        file.write("Rok produkcji: " + product.production_year + "\n")
-        file.write("Kraj produkcji: " + product.country_of_origin + "\n")
-        file.write("Gwarancja: " + product.guaranty + "\n")
-        file.write("Inne: " + product.other_info + "\n")
+        file.write("Producent: " + str(product.Manufacturer) + "\n")
+        file.write("Cena: " + str(product.Price) + "\n")
+        file.write("Typ pojazdu: " + str(product.Car_type) + "\n")
+        file.write("Sezon: " + str(product.season) + "\n")
+        file.write("Rozmiar: " + str(product.size) + "\n")
+        file.write("Homologacja: " + str(product.approval) + "\n")
+        file.write("Indeks prędkości: " + str(product.speed_index) + "\n")
+        file.write("Indeks nośności: " + str(product.weight_index) + "\n")
+        file.write("Etykieta UE: " + str(product.sound_index) + "\n")
+        file.write("Rok produkcji: " + str(product.production_year) + "\n")
+        file.write("Kraj produkcji: " + str(product.country_of_origin) + "\n")
+        file.write("Gwarancja: " + str(product.guaranty) + "\n")
+        file.write("Inne: " + str(product.other_info) + "\n")
         file.write("Data publikacji w bazie: " + str(product.pub_date) + "\n")
 
 def clear_database(request):
@@ -118,38 +120,47 @@ def refresh_table(request):
     products_list = Products.objects.all().order_by('-pub_date')
     return render(request, 'etlapp/refresh_table.html', {'products_list': products_list})
 
-
+tires = list()
+data_list = list()
+date = str(datetime.datetime.now())
 def dummy(request):
+    global data_list
+    global tires
     if request.method == "POST":
-        tires = list()
         data = {}
+        summary = ""
 
         if request.POST['button_text'] == "ETL":
-            summary = "Kliknięto przycisk ETL"            
+            width = request.POST['dropdown_id']
+            time = ScrapperRedux1.extract(tires, width)
+            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            data_list = ScrapperRedux1.transform(tires)
+            summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
+            time = ScrapperRedux1.load(data_list[0], date)
+            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data = {
                summary:summary,
             }
 
         elif request.POST['button_text'] == "EXTRACT":
             tire_widths = ScrapperRedux1.get_tire_widths()
-            width = tire_widths.index(request.POST['dropdown_id'])
-
+            width = request.POST['dropdown_id']
             extract_time = ScrapperRedux1.extract(tires, width)
-
-            summary = "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + "rekordów. Operacja zajęła " + str(int(extract_time/60)) + "min " + str(int(extract_time%60)) + "sekund."
-          
+            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(extract_time/60)) + " min " + str(int(extract_time%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
 
         elif request.POST['button_text'] == "TRANSFORM":
-            summary = "Kliknięto przycisk TRANSFORM"            
+            data_list = ScrapperRedux1.transform(tires)
+            summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
 
         else:
-            summary = "Kliknięto przycisk LOAD"            
+            time = ScrapperRedux1.load(data_list[0], date)
+            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data = {
                 summary:summary,
             }
