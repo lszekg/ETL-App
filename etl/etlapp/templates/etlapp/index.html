@@ -177,14 +177,29 @@
           },
           success: function(data){
             $.each(data, function( index, value ){
-                $("#feedback").val(value);
+                $("#feedback").val($("#feedback").val()+value);
+                var $textarea = $('#feedback');
+                $textarea.scrollTop($textarea[0].scrollHeight);
             });
+            location.reload();
             }
           });
     });
   </script>
 
-
+  <script>
+      $(document).ready(function() {
+        $.ajax({
+           url : "{% static 'etlapp/logs/logs.txt' %}",
+           dataType: "text",
+           success : function (data) {
+               $("#feedback").text(data);
+               var $textarea = $('#feedback');
+               $textarea.scrollTop($textarea[0].scrollHeight);
+           }
+        });
+      });
+  </script>
 
  <script>
   $('.etlButton').click(function(){
@@ -204,18 +219,22 @@
           dropdown_id:dropdown_id,
         },
         success: function(data){
-          $.each(data, function( index, value ){
-              $("#feedback").val(value);
-          });
+            $.each(data, function( index, value ){
+                $("#feedback").val($("#feedback").val()+value);
+                var $textarea = $('#feedback');
+                $textarea.scrollTop($textarea[0].scrollHeight);
+            });
 
             if (button_text === "EXTRACT") {
               $('#transform').attr("disabled", false); 
             } else if (button_text === "TRANSFORM") {
               $('#load').attr("disabled", false);
-            } else {
+            } else if (button_text === "LOAD") {
               $('#load').attr("disabled", true);
+              location.reload();
+            } else {
+              location.reload();
             }
-
           }
         });
 

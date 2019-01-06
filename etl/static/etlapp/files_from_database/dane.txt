@@ -1,0 +1,18 @@
+Produkt: ZOVAC HP W401
+
+Id bazy danych: 855
+Id OPONEO: hankook-zovac-hp-w401-5-00-r12-83-81-p-studdable
+Producent: Hankook
+Cena: 259
+Typ pojazdu: Dostawcze
+Sezon: Zimowe
+Rozmiar: 5.00 R12
+Homologacja: 
+Indeks prędkości: P = max 150 km/h
+Indeks nośności: 83/81 = max 487 kg
+Etykieta UE: GE71dB
+Rok produkcji: 
+Kraj produkcji: None
+Gwarancja: dożywotnia 
+Inne: 
+Data publikacji w bazie: 2019-01-06 20:00:16.822366+00:00
