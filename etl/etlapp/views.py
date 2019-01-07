@@ -151,7 +151,9 @@ def dummy(request):
             data_list = ScrapperRedux1.transform(tires)
             summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
             time = ScrapperRedux1.load(data_list[0], date)
-            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"           
+            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            data_list = list()
+            tires = list()
 
         elif request.POST['button_text'] == "EXTRACT":
             tire_widths = ScrapperRedux1.get_tire_widths()
@@ -166,6 +168,8 @@ def dummy(request):
         else:
             time = ScrapperRedux1.load(data_list[0], date)
             summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            data_list = list()
+            tires = list()
 
         with open('static/etlapp/logs/logs.txt', 'a', encoding='utf-8') as file:
                 file.write(summary)
