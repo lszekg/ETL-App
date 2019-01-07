@@ -63,7 +63,7 @@
     <div class="mx-auto" style="width:350px">
       <div>
         <button class="btn btn-rep btn-block" id="clicker" href="#">
-          POBIERZ BAZĘ W FORMACIE .CSV
+          POBIERZ BAZĘ W FORMACIE XLS
         </button>
         <a href="#" id="rap1"></a>
       </div>
@@ -135,8 +135,8 @@
             selected_product:selected_product,
           },
           success: function(data){
-                $("#rap1").attr("href", "{% static 'etlapp/files_from_database/oponeo.csv' %}");
-                $('#rap1').attr('download', "oponeo.csv");
+                $("#rap1").attr("href", "{% static 'etlapp/files_from_database/oponeo.xls' %}");
+                $('#rap1').attr('download', "oponeo.xls");
                 document.getElementById("rap1").click();
             }
           });

@@ -30,7 +30,7 @@ def save_file(request):
                 "dfile": product_id.Name
             }
         else:
-            generate_csv(Products.objects.all(), 'static/etlapp/files_from_database/oponeo.csv')
+            generate_csv(Products.objects.all(), 'static/etlapp/files_from_database/oponeo.xls')
         return JsonResponse(data)
 
     return render(request, 'etlapp/index.html')
