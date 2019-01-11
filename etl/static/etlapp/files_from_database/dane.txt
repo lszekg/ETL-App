@@ -1,18 +1,18 @@
-Produkt: ZOVAC HP W401
+Produkt: RT03
 
-Id bazy danych: 855
-Id OPONEO: hankook-zovac-hp-w401-5-00-r12-83-81-p-studdable
+Id bazy danych: 910
+Id OPONEO: hankook-rt03-35x12-50-r17-121-q-mfs-bsw
 Producent: Hankook
-Cena: 259
-Typ pojazdu: Dostawcze
-Sezon: Zimowe
-Rozmiar: 5.00 R12
+Cena: 1709
+Typ pojazdu: 4x4
+Sezon: Letnie
+Rozmiar: 35x12.50 R17
 Homologacja: 
-Indeks prędkości: P = max 150 km/h
-Indeks nośności: 83/81 = max 487 kg
-Etykieta UE: GE71dB
+Indeks prędkości: Q = max 160 km/h
+Indeks nośności: 121 = max 1450 kg
+Etykieta UE: 
 Rok produkcji: 
 Kraj produkcji: None
 Gwarancja: dożywotnia 
 Inne: 
-Data publikacji w bazie: 2019-01-06 20:00:16.822366+00:00
+Data publikacji w bazie: 2019-01-10 17:55:25.841843+00:00

@@ -103,14 +103,14 @@ def generate_txt(product, file_path):
 
 def clear_database(request):
     if request.method == "POST":
-        summary = "Baza danych została wyczyszczona. Usunięto " + str(len(Products.objects.all())) + " rekordów.\n"
+        summary = str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Baza danych została wyczyszczona. Usunięto " + str(len(Products.objects.all())) + " rekordów.\n"
         Products.objects.all().delete()
 
         data = {
             summary:summary,
         }
 
-        with open('static/etlapp/logs/logs.txt', 'a', encoding='utf-8') as file:
+        with open('static/etlapp/logs/logs.txt', 'w', encoding='utf-8') as file:
                 file.write(summary)
 
         with open('static/etlapp/logs/logs.txt', 'r', encoding='utf-8') as file:
@@ -147,11 +147,11 @@ def dummy(request):
         if request.POST['button_text'] == "ETL":
             width = request.POST['dropdown_id']
             time = ScrapperRedux1.extract(tires, width)
-            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            summary += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data_list = ScrapperRedux1.transform(tires)
-            summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
+            summary += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
             time = ScrapperRedux1.load(data_list[0], date)
-            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            summary += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data_list = list()
             tires = list()
 
@@ -159,15 +159,15 @@ def dummy(request):
             tire_widths = ScrapperRedux1.get_tire_widths()
             width = request.POST['dropdown_id']
             extract_time = ScrapperRedux1.extract(tires, width)
-            summary += "Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(extract_time/60)) + " min " + str(int(extract_time%60)) + " sekund.\n"
+            summary += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Ekstrakcja zakończona. Sparsowano " + str(len(tires)) + " rekordów. Operacja zajęła " + str(int(extract_time/60)) + " min " + str(int(extract_time%60)) + " sekund.\n"
 
         elif request.POST['button_text'] == "TRANSFORM":
             data_list = ScrapperRedux1.transform(tires)
-            summary += "Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
+            summary += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Transformacja zakończona. Przygotowano " + str(len(data_list[0])) + " obiektów. Operacja zajęła " + str(int(data_list[1]/60)) + " min " + str(int(data_list[1]%60)) + " sekund.\n"
 
         else:
             time = ScrapperRedux1.load(data_list[0], date)
-            summary += "Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
+            summary += str(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " Ładowanie zakończone. Operacja zajęła " + str(int(time/60)) + " min " + str(int(time%60)) + " sekund.\n"
             data_list = list()
             tires = list()
 

@@ -48,7 +48,7 @@
 
   <br>
 
-  <div class="mx-auto" style="width:350px">
+  <div class="mx-auto" style="width:750px">
     <textarea class="textBox" id="feedback" readonly></textarea>
   </div>
 
@@ -220,7 +220,7 @@
         },
         success: function(data){
             $.each(data, function( index, value ){
-                $("#feedback").val($("#feedback").val()+value);
+                $("#feedback").val(value);
                 var $textarea = $('#feedback');
                 $textarea.scrollTop($textarea[0].scrollHeight);
             });
