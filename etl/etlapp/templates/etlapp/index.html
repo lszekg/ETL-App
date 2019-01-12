@@ -190,7 +190,7 @@
   <script>
       $(document).ready(function() {
         $.ajax({
-           url : "{% static 'etlapp/logs/logs.txt' %}",
+           url : "{% static 'etlapp/logs/db_session_logs.txt' %}",
            dataType: "text",
            success : function (data) {
                $("#feedback").text(data);

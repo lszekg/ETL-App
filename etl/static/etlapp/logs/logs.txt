@@ -1,1 +1,19 @@
-2019-01-11 13:04:13 Baza danych została wyczyszczona. Usunięto 3 rekordów.
+2019-01-12 23:33:13 Baza danych została wyczyszczona. Usunięto 17 rekordów.
+2019-01-12 23:53:13 Ekstrakcja zakończona. Sparsowano 3 rekordów. Operacja zajęła 0 min 15 sekund.
+2019-01-12 23:53:13 Transformacja zakończona. Przygotowano 3 obiektów. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:53:14 Ładowanie zakończone. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:54:52 Baza danych została wyczyszczona. Usunięto 3 rekordów.
+2019-01-12 23:54:58 Baza danych została wyczyszczona. Usunięto 0 rekordów.
+2019-01-12 23:55:48 Ekstrakcja zakończona. Sparsowano 5 rekordów. Operacja zajęła 0 min 13 sekund.
+2019-01-12 23:55:48 Transformacja zakończona. Przygotowano 5 obiektów. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:55:49 Ładowanie zakończone. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:56:36 Ekstrakcja zakończona. Sparsowano 12 rekordów. Operacja zajęła 0 min 28 sekund.
+2019-01-12 23:56:36 Transformacja zakończona. Przygotowano 11 obiektów. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:56:37 Ładowanie zakończone. Operacja zajęła 0 min 1 sekund.
+2019-01-12 23:56:53 Baza danych została wyczyszczona. Usunięto 16 rekordów.
+2019-01-12 23:57:25 Ekstrakcja zakończona. Sparsowano 4 rekordów. Operacja zajęła 0 min 13 sekund.
+2019-01-12 23:57:28 Transformacja zakończona. Przygotowano 3 obiektów. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:57:29 Ładowanie zakończone. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:58:56 Ekstrakcja zakończona. Sparsowano 68 rekordów. Operacja zajęła 1 min 18 sekund.
+2019-01-12 23:58:56 Transformacja zakończona. Przygotowano 59 obiektów. Operacja zajęła 0 min 0 sekund.
+2019-01-12 23:59:03 Ładowanie zakończone. Operacja zajęła 0 min 6 sekund.

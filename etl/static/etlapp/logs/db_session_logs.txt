@@ -1,0 +1,1 @@
+2019-01-13 00:00:28 Baza danych została wyczyszczona. Usunięto 62 rekordów.

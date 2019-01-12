@@ -110,10 +110,14 @@ def clear_database(request):
             summary:summary,
         }
 
-        with open('static/etlapp/logs/logs.txt', 'w', encoding='utf-8') as file:
+        with open('static/etlapp/logs/db_session_logs.txt', 'r', encoding='utf-8') as session_logs:
+            with open('static/etlapp/logs/logs.txt', 'a', encoding='utf-8') as logs:
+                logs.write(session_logs.read())
+
+        with open('static/etlapp/logs/db_session_logs.txt', 'w', encoding='utf-8') as file:
                 file.write(summary)
 
-        with open('static/etlapp/logs/logs.txt', 'r', encoding='utf-8') as file:
+        with open('static/etlapp/logs/db_session_logs.txt', 'r', encoding='utf-8') as file:
             content = [x.strip('\n') for x in file.readlines()]
 
         test = ""
@@ -171,10 +175,10 @@ def dummy(request):
             data_list = list()
             tires = list()
 
-        with open('static/etlapp/logs/logs.txt', 'a', encoding='utf-8') as file:
+        with open('static/etlapp/logs/db_session_logs.txt', 'a', encoding='utf-8') as file:
                 file.write(summary)
 
-        with open('static/etlapp/logs/logs.txt', 'r', encoding='utf-8') as file:
+        with open('static/etlapp/logs/db_session_logs.txt', 'r', encoding='utf-8') as file:
             content = [x.strip('\n') for x in file.readlines()]
 
         test = ""
