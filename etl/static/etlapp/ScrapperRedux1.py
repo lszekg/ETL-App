@@ -2,12 +2,12 @@ import time
 import requests
 import re
 from bs4 import BeautifulSoup as Bs
+from etlapp.models import Products
 from selenium import webdriver
 from selenium.common import exceptions
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.chrome.options import Options
-from django.db import models
-from etlapp.models import Products
+
 
 class Tire:
     def __init__(self, tire_dict):
@@ -68,7 +68,6 @@ def extract_data(link, data_list):
         try:
             raw_html = requests.get("https://www.oponeo.pl" + link).content
         except requests.exceptions.RequestException:
-            print("Time Out")
             time.sleep(5)
             continue
         break
@@ -116,7 +115,6 @@ def extract(data_list, width):
                 WebDriverWait(driver, 10)
                 Select(driver.find_element_by_name("_ctTS_ddlDimRatio")).select_by_value(ratio)
             except exceptions.WebDriverException:
-                print("Stale element - ratios")
                 continue
             break
         address = "https://www.oponeo.pl/WS/ShopService.svc/GetTireDiameters"
@@ -128,13 +126,11 @@ def extract(data_list, width):
                     WebDriverWait(driver, 10)
                     old_value = driver.find_element_by_class_name('productName').text
                 except exceptions.WebDriverException:
-                    print("Stale element - old product name")
                     continue
                 break
             try:
                 Select(driver.find_element_by_name("_ctTS_ddlDimDiameter")).select_by_value(diameter)
             except exceptions.WebDriverException:
-                print("Element not loaded - diameter.")
                 continue
             for i in range(500):
             # while True:
@@ -158,7 +154,6 @@ def extract(data_list, width):
                         WebDriverWait(driver, 10)
                         old_value = driver.find_element_by_class_name('productName').text
                     except exceptions.WebDriverException:
-                        print("Stale element - old product name")
                         continue
                     break
                 try:
@@ -177,8 +172,6 @@ def extract(data_list, width):
                     break
                 answer = driver.page_source
                 continue
-    print(data_list)
-    print(len(data_list))
     driver.close()
     return time.time() - t
 
@@ -209,6 +202,5 @@ def load(data, date):
                      guaranty=obj.guaranty,
                      other_info=obj.other_info,
                      pub_date=date)
-        print("A")
         p.save()
     return time.time() - t
